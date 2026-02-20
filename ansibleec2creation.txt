@@ -1,0 +1,27 @@
+- name: Create EC2 Instance using Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    region: us-east-1
+    instance_type: t3.micro
+    key_name: ansiii
+    image_id: ami-068c0051b15cdb816   # Amazon Linux 2 (Mumbai)
+    security_group: my_sg
+    instance_name: Ansible-EC2
+
+  tasks:
+    - name: Create EC2 instance
+      amazon.aws.ec2_instance:
+        name: "{{ instance_name }}"
+        key_name: "{{ key_name }}"
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ image_id }}"
+        wait: yes
+        region: "{{ region }}"
+        security_group: "{{ security_group }}"
+        count: 1
+        tags:
+          Environment: Dev
+          CreatedBy: Ansible

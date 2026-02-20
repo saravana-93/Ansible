@@ -1,0 +1,26 @@
+---
+- name: Install and configure Apache httpd
+  hosts: all
+  become: yes
+
+  vars:
+    httpd_port: 8080   # Change port here
+
+  tasks:
+    - name: Install httpd
+      yum:
+        name: httpd
+        state: present
+
+    - name: Change httpd port
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^Listen '
+        line: "Listen {{ httpd_port }}"
+        backup: yes
+
+    - name: Start and enable httpd
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
